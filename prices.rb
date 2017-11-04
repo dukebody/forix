@@ -18,6 +18,25 @@ class CurrencyNotFound < ArgumentError
 end 
 
 
+class CurrencySource
+    def get_factors
+        raise "Return a hashmap of {currency_code => factor}"
+    end
+end
+
+
+class FixerIO < CurrencySource
+    def get_factors
+        rates_json = Net::HTTP.get('api.fixer.io', '/latest')
+        data = JSON.parse(rates_json)
+        factors = data["rates"]
+        # inject base factor (EUR)
+        factors[data["base"]] = 1
+        return factors 
+    end
+end
+
+
 class CurrencyExchange
     def initialize()
         @store = {}
@@ -49,11 +68,11 @@ class CurrencyExchange
     end
 
 
-    def sync_currencies()
-        rates_json = Net::HTTP.get('api.fixer.io', '/latest')
-        data = JSON.parse(rates_json)
-        set_factor(data["base"], 1)
-        data["rates"].each do |currency, factor|
+    def sync(currency_source)
+        clear_factors
+
+        factors = currency_source.get_factors
+        factors.each do |currency, factor|
             set_factor(currency, factor)
         end
     end

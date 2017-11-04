@@ -5,9 +5,10 @@ require_relative 'utils'
 
 class Forix < Sinatra::Base
     @@exchange = CurrencyExchange.new
+    @@currency_source = FixerIO.new
 
     def self.sync_currencies
-       @@exchange.sync_currencies
+       @@exchange.sync(@@currency_source)
     end
 
     get '/sync' do

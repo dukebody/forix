@@ -1,6 +1,13 @@
 require_relative "prices"
 require "test/unit"
  
+class DummyCurrencySource
+    def get_factors
+        return {"EUR" => 1.11, "GBP" => 12.1}
+    end 
+end
+
+
 class TestPrice < Test::Unit::TestCase
   def setup
     @exchange = CurrencyExchange.new
@@ -28,6 +35,13 @@ class TestPrice < Test::Unit::TestCase
   def test_currency_not_found
      price = Price.new(1, 'EUR')
      assert_raise(CurrencyNotFound) {@exchange.convert_to_currency(price, 'BTC')}
+  end
+  
+  def test_sync_currencies
+    currency_source = DummyCurrencySource.new
+    @exchange.sync(currency_source)
+    assert_equal(1.11, @exchange.get_factor("EUR"))
+    assert_equal(12.1, @exchange.get_factor("GBP"))
   end
  
 end
