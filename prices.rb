@@ -27,7 +27,8 @@ end
 
 class FixerIO < CurrencySource
     def get_factors
-        rates_json = Net::HTTP.get('api.fixer.io', '/latest')
+        uri = URI('https://api.fixer.io/latest')
+        rates_json = Net::HTTP.get(uri)
         data = JSON.parse(rates_json)
         factors = data["rates"]
         # inject base factor (EUR)
