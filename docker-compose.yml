@@ -1,0 +1,6 @@
+---
+forix:  
+  build: .
+  command: bundle exec puma config.ru
+  ports:
+  - "9292:9292"
