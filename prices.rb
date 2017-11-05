@@ -69,10 +69,8 @@ class CurrencyExchange
     end
 
 
-    def sync(currency_source)
+    def set_factors(factors)
         clear_factors
-
-        factors = currency_source.get_factors
         factors.each do |currency, factor|
             set_factor(currency, factor)
         end
@@ -98,3 +96,8 @@ class CurrencyExchange
 
 end
 
+
+def sync_factors(currency_exchange, currency_source)
+    factors = currency_source.get_factors
+    currency_exchange.set_factors(factors)
+end

@@ -8,7 +8,7 @@ class Forix < Sinatra::Base
     @@currency_source = FixerIO.new
 
     def self.sync_currencies
-       @@exchange.sync(@@currency_source)
+        sync_factors(@@exchange, @@currency_source)
     end
 
     get '/sync' do
