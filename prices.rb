@@ -8,14 +8,14 @@ class Price
         @amount = amount
         @currency = currency
     end
-    
+
     attr_reader :amount
     attr_reader :currency
 end
 
 
-class CurrencyNotFound < ArgumentError  
-end 
+class CurrencyNotFound < ArgumentError
+end
 
 
 class CurrencySource
@@ -33,7 +33,7 @@ class FixerIO < CurrencySource
         factors = data["rates"]
         # inject base factor (EUR)
         factors[data["base"]] = 1
-        return factors 
+        return factors
     end
 end
 
@@ -42,7 +42,7 @@ class CurrencyExchange
     def initialize()
         @store = {}
     end
-    
+
     def get_factor(currency)
         factor = @store[currency]
         if factor == nil
@@ -59,7 +59,7 @@ class CurrencyExchange
         elsif not is_number? factor
             raise ArgumentError('Factor must be a number')
         end
-         
+
         @store[currency] = factor
     end
 
@@ -80,16 +80,10 @@ class CurrencyExchange
     def convert_to_currency(price, target_currency) if price.currency == target_currency
             return price
         else
-            # check the currencies
             from_factor = get_factor(price.currency)
             to_factor = get_factor(target_currency)
-            if to_factor == nil
-                raise CurrencyNotFound, target_currency
-            elsif from_factor == nil
-                raise CurrencyNotFound, price.currency
-            end
-            factor = to_factor / from_factor
-            amount = (price.amount * factor).round(2)
+            conversion_factor = to_factor / from_factor
+            amount = (price.amount * conversion_factor).round(2)
             return Price.new(amount=amount, currency=target_currency)
         end
     end
