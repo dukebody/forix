@@ -77,7 +77,8 @@ class CurrencyExchange
     end
 
 
-    def convert_to_currency(price, target_currency) if price.currency == target_currency
+    def convert_to_currency(price, target_currency)
+        if price.currency == target_currency
             return price
         else
             from_factor = get_factor(price.currency)
