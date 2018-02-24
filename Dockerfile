@@ -11,4 +11,6 @@ ADD Gemfile* $APP_HOME/
 
 RUN bundle install
 
+EXPOSE 9292
+
 ADD . $APP_HOME
